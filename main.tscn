@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://bnihhnn8ar2nx" path="res://enemy_spawner.gd" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://cwq84ck8g6rlr" path="res://enemy.tscn" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://cndcwebgpo8f0" path="res://hud.gd" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://5u1l61bdkhl7" path="res://Boss.tscn" id="4_7mycd"]
+[ext_resource type="Script" uid="uid://d3th1vnqlvstv" path="res://wave_manager.gd" id="6_272bh"]
 
 [node name="Main" type="Node2D" unique_id=1373487488]
 y_sort_enabled = true
@@ -14,6 +16,7 @@ position = Vector2(576, 324)
 [node name="EnemySpawner" type="Node2D" parent="." unique_id=1431747986]
 script = ExtResource("2_h2yge")
 enemy_scene = ExtResource("3_h2yge")
+boss_scene = ExtResource("4_7mycd")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1112174929]
 script = ExtResource("4_1bvp3")
@@ -46,7 +49,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0.02745098, 1)
+color = Color(0, 0, 0.02745098, 0.7058824)
 
 [node name="FinalTimeLabel" type="Label" parent="HUD/GameOverPanel" unique_id=1848737496]
 layout_mode = 1
@@ -100,3 +103,17 @@ offset_left = 20.0
 offset_top = 60.0
 offset_right = 60.0
 offset_bottom = 83.0
+
+[node name="WaveLabel" type="Label" parent="HUD" unique_id=189947846]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -102.0
+offset_top = 50.0
+offset_right = -62.0
+offset_bottom = 73.0
+grow_horizontal = 0
+text = "Wave 1"
+
+[node name="WaveManager" type="Node" parent="." unique_id=479027615]
+script = ExtResource("6_272bh")

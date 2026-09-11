@@ -5,7 +5,7 @@ extends CharacterBody2D
 # ==========================================
 
 @export var move_speed: float = 60.0
-@export var max_hp: float = 20.0
+@export var max_hp: float = 15.0
 @export var contact_damage: float = 5.0
 
 var current_hp: float

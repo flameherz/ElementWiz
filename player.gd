@@ -25,6 +25,9 @@ var element_counts: Dictionary = {}
 
 const FUSION_THRESHOLD := 3
 
+@export var base_projectile_damage: float = 10.0
+var bonus_damage: float = 0.0
+
 @onready var projectile_scene := preload("res://projectile.tscn")
 
 func _ready() -> void:
@@ -61,6 +64,7 @@ func do_fusion(element_a: Elements.Element, element_b: Elements.Element) -> void
 
 	var fusion_name := Elements.get_fusion_name(element_a, element_b)
 	fusion_triggered.emit(element_a, element_b, fusion_name)
+	bonus_damage += 2.0
 
 
 func take_damage(amount: float) -> void:
@@ -130,3 +134,4 @@ func fire_projectile(target: Node2D) -> void:
 	get_tree().current_scene.add_child(proj)
 	proj.global_position = global_position
 	proj.setup(target.global_position)
+	proj.damage = base_projectile_damage + bonus_damage

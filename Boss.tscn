@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://5u1l61bdkhl7"]
+
+[ext_resource type="Script" path="res://boss.gd" id="1_4jvlg"]
+[ext_resource type="Texture2D" uid="uid://cspugirnyrh6i" path="res://png/Golems and elementals/6.png" id="2_paxtu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ohn0q"]
+radius = 15.0
+
+[node name="Boss" type="CharacterBody2D" unique_id=1588534607]
+script = ExtResource("1_4jvlg")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=540892426]
+texture = ExtResource("2_paxtu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=567850615]
+shape = SubResource("CircleShape2D_ohn0q")

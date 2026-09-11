@@ -20,6 +20,8 @@ extends CanvasLayer
 @onready var element_tracker: HBoxContainer = $ElementTracker
 @onready var fusion_popup: Label = $FusionPopup
 @onready var flash_overlay: ColorRect = $FlashOverlay
+@onready var wave_label: Label = $WaveLabel
+@onready var wave_manager: Node = get_node("../WaveManager")
 
 var elapsed_time: float = 0.0
 var element_labels: Dictionary = {}
@@ -47,6 +49,10 @@ func _ready() -> void:
 		player.element_changed.connect(_on_element_changed)
 		player.fusion_triggered.connect(_on_fusion_triggered)
 		_on_player_health_changed(player.current_hp, player.max_hp)
+
+	wave_manager.wave_changed.connect(_on_wave_changed)
+	wave_manager.victory.connect(_on_victory)
+	_on_wave_changed(wave_manager.current_wave)
 
 
 func build_element_tracker() -> void:
@@ -107,7 +113,7 @@ func _on_fusion_triggered(_element_a: Elements.Element, _element_b: Elements.Ele
 	fusion_popup.text = "✨ ฟิวชั่น: %s ✨" % fusion_name
 
 	# แฟลชวาบทั้งจอ
-	flash_overlay.color.a = 0.25
+	flash_overlay.color.a = 0.6
 	var flash_tween := create_tween()
 	flash_tween.tween_property(flash_overlay, "color:a", 0.0, 0.3)
 
@@ -118,6 +124,16 @@ func _on_fusion_triggered(_element_a: Elements.Element, _element_b: Elements.Ele
 	popup_tween.tween_property(fusion_popup, "scale", Vector2(1.0, 1.0), 0.2).set_trans(Tween.TRANS_BACK)
 	popup_tween.tween_interval(1.2)
 	popup_tween.tween_property(fusion_popup, "modulate:a", 0.0, 0.5)
+
+
+func _on_wave_changed(wave_number: int) -> void:
+	wave_label.text = "เวฟ %d/10" % wave_number
+
+
+func _on_victory() -> void:
+	get_tree().paused = true
+	final_time_label.text = "ชนะแล้ว! เอาชนะบอสสำเร็จ ใช้เวลา %s" % format_time(elapsed_time)
+	game_over_panel.visible = true
 
 
 func _on_restart_pressed() -> void:
