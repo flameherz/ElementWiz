@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://6mm3u86yhupc" path="res://player.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://bnihhnn8ar2nx" path="res://enemy_spawner.gd" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://cwq84ck8g6rlr" path="res://enemy.tscn" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://cndcwebgpo8f0" path="res://hud.gd" id="4_1bvp3"]
 
 [node name="Main" type="Node2D" unique_id=1373487488]
 y_sort_enabled = true
@@ -13,3 +14,89 @@ position = Vector2(576, 324)
 [node name="EnemySpawner" type="Node2D" parent="." unique_id=1431747986]
 script = ExtResource("2_h2yge")
 enemy_scene = ExtResource("3_h2yge")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1112174929]
+script = ExtResource("4_1bvp3")
+
+[node name="HPBar" type="ProgressBar" parent="HUD" unique_id=945366515]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 47.0
+
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=1915861700]
+offset_left = 1050.0
+offset_top = 20.0
+offset_right = 1090.0
+offset_bottom = 43.0
+
+[node name="GameOverPanel" type="Control" parent="HUD" unique_id=501321320]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="HUD/GameOverPanel" unique_id=1409278164]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0.02745098, 1)
+
+[node name="FinalTimeLabel" type="Label" parent="HUD/GameOverPanel" unique_id=1848737496]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.5
+offset_top = -61.5
+offset_right = 43.5
+offset_bottom = -38.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Game Over"
+
+[node name="RestartButton" type="Button" parent="HUD/GameOverPanel" unique_id=1756195889]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -35.5
+offset_right = 32.0
+offset_bottom = -4.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "เล่นใหม่"
+
+[node name="ElementTracker" type="HBoxContainer" parent="HUD" unique_id=1056237716]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 12
+
+[node name="FlashOverlay" type="ColorRect" parent="HUD" unique_id=1632901137]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="FusionPopup" type="Label" parent="HUD" unique_id=1621279821]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 60.0
+offset_bottom = 83.0

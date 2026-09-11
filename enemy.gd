@@ -43,8 +43,18 @@ func take_damage(amount: float) -> void:
 
 
 func die() -> void:
-	# TODO: ดรอปธาตุตรงนี้ตอนใส่ elemental system
+	drop_element()
 	queue_free()
+
+
+func drop_element() -> void:
+	var pickup_scene := load("res://element_pickup.tscn")
+	if not pickup_scene:
+		return
+	var pickup = pickup_scene.instantiate()
+	get_tree().current_scene.add_child(pickup)
+	pickup.global_position = global_position
+	pickup.element_type = Elements.get_random_element()
 
 
 # เรียกจาก signal body_entered ของ Area2D (child) เท่านั้น — สำหรับตรวจจับโดนกระสุน

@@ -10,6 +10,7 @@ script = ExtResource("1_a85iw")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=719377604]
 modulate = Color(1, 1, 0, 1)
+scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_qxf0c")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=40785457]

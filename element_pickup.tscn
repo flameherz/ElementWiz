@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bktaolu42k7il"]
+
+[ext_resource type="Script" uid="uid://bjsee6skj4unn" path="res://element_pickup.gd" id="1_ixwfo"]
+[ext_resource type="Texture2D" uid="uid://c115ypwy27av6" path="res://icon.svg" id="2_660fq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1bvp3"]
+
+[node name="ElementPickup" type="Area2D" unique_id=1324777546]
+script = ExtResource("1_ixwfo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1005399403]
+texture = ExtResource("2_660fq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=575058341]
+shape = SubResource("CircleShape2D_1bvp3")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
