@@ -22,6 +22,9 @@ extends CanvasLayer
 @onready var flash_overlay: ColorRect = $FlashOverlay
 @onready var wave_label: Label = $WaveLabel
 @onready var wave_manager: Node = get_node("../WaveManager")
+@onready var currency_label: Label = $GameOverPanel/CurrencyLabel
+@onready var hp_upgrade_button: Button = $GameOverPanel/HPUpgradeButton
+@onready var damage_upgrade_button: Button = $GameOverPanel/DamageUpgradeButton
 
 var elapsed_time: float = 0.0
 var element_labels: Dictionary = {}
@@ -53,6 +56,9 @@ func _ready() -> void:
 	wave_manager.wave_changed.connect(_on_wave_changed)
 	wave_manager.victory.connect(_on_victory)
 	_on_wave_changed(wave_manager.current_wave)
+
+	hp_upgrade_button.pressed.connect(_on_hp_upgrade_pressed)
+	damage_upgrade_button.pressed.connect(_on_damage_upgrade_pressed)
 
 
 func build_element_tracker() -> void:
@@ -105,8 +111,11 @@ func _on_player_health_changed(current_hp: float, max_hp: float) -> void:
 
 func _on_player_died() -> void:
 	get_tree().paused = true
-	final_time_label.text = "รอดชีวิตได้: %s" % format_time(elapsed_time)
+	var earned: int = wave_manager.current_wave * 5 + int(elapsed_time / 10.0)
+	SaveManager.add_currency(earned)
+	final_time_label.text = "รอดชีวิตได้: %s\nได้รับ %d เหรียญ" % [format_time(elapsed_time), earned]
 	game_over_panel.visible = true
+	refresh_shop_ui()
 
 
 func _on_fusion_triggered(_element_a: Elements.Element, _element_b: Elements.Element, fusion_name: String) -> void:
@@ -132,8 +141,28 @@ func _on_wave_changed(wave_number: int) -> void:
 
 func _on_victory() -> void:
 	get_tree().paused = true
-	final_time_label.text = "ชนะแล้ว! เอาชนะบอสสำเร็จ ใช้เวลา %s" % format_time(elapsed_time)
+	SaveManager.record_boss_defeat()
+	var earned: int = 100 + wave_manager.current_wave * 5
+	SaveManager.add_currency(earned)
+	final_time_label.text = "ชนะแล้ว! เอาชนะบอสสำเร็จ ใช้เวลา %s\nได้รับ %d เหรียญ" % [format_time(elapsed_time), earned]
 	game_over_panel.visible = true
+	refresh_shop_ui()
+
+
+func refresh_shop_ui() -> void:
+	currency_label.text = "เหรียญสะสม: %d" % SaveManager.currency
+	hp_upgrade_button.text = "ซื้อ +%.0f HP ถาวร (%d เหรียญ)" % [SaveManager.HP_PER_LEVEL, SaveManager.get_hp_upgrade_cost()]
+	damage_upgrade_button.text = "ซื้อ +%.0f DMG ถาวร (%d เหรียญ)" % [SaveManager.DAMAGE_PER_LEVEL, SaveManager.get_damage_upgrade_cost()]
+
+
+func _on_hp_upgrade_pressed() -> void:
+	SaveManager.buy_hp_upgrade()
+	refresh_shop_ui()
+
+
+func _on_damage_upgrade_pressed() -> void:
+	SaveManager.buy_damage_upgrade()
+	refresh_shop_ui()
 
 
 func _on_restart_pressed() -> void:

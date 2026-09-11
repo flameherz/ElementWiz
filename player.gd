@@ -31,6 +31,8 @@ var bonus_damage: float = 0.0
 @onready var projectile_scene := preload("res://projectile.tscn")
 
 func _ready() -> void:
+	max_hp += SaveManager.get_hp_bonus()
+	base_projectile_damage += SaveManager.get_damage_bonus()
 	current_hp = max_hp
 	health_changed.emit(current_hp, max_hp)
 	for element in Elements.Element.values():
