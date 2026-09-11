@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://6mm3u86yhupc"]
 
 [ext_resource type="Script" uid="uid://b7h754srymufs" path="res://player.gd" id="1_4flbx"]
-[ext_resource type="Texture2D" uid="uid://c115ypwy27av6" path="res://icon.svg" id="2_onrkg"]
+[ext_resource type="Texture2D" uid="uid://djopmd6dhwaw4" path="res://png/Wizard Pack/Idle.png" id="2_onrkg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ysv2h"]
 
@@ -11,6 +11,7 @@ script = ExtResource("1_4flbx")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1304685365]
 modulate = Color(0, 1, 0, 1)
 texture = ExtResource("2_onrkg")
+hframes = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=248995521]
 shape = SubResource("CircleShape2D_ysv2h")

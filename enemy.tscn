@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cwq84ck8g6rlr"]
 
 [ext_resource type="Script" uid="uid://dnobemvuqm675" path="res://enemy.gd" id="1_7k104"]
-[ext_resource type="Texture2D" uid="uid://c115ypwy27av6" path="res://icon.svg" id="2_4gyqm"]
+[ext_resource type="Texture2D" uid="uid://cspugirnyrh6i" path="res://png/Golems and elementals/6.png" id="2_4gyqm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4flbx"]
 
