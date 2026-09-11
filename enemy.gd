@@ -2,20 +2,31 @@ extends CharacterBody2D
 
 # ==========================================
 # Enemy.gd — ศัตรูพื้นฐาน เดินตรงเข้าใส่ผู้เล่น (Swarmer archetype)
+# มีธาตุประจำตัว (element_type) กำหนดโดย spawner ตอน spawn
 # ==========================================
 
 @export var move_speed: float = 60.0
 @export var max_hp: float = 15.0
 @export var contact_damage: float = 5.0
+@export var element_type: Elements.Element = Elements.Element.FIRE
+@export var exp_reward: float = 3.0
 
 var current_hp: float
 var player: Node2D = null
+
+@onready var sprite: Sprite2D = $Sprite2D
 
 
 func _ready() -> void:
 	current_hp = max_hp
 	add_to_group("enemies")
 	player = get_tree().get_first_node_in_group("player")
+	apply_element_tint()
+
+
+func apply_element_tint() -> void:
+	if sprite:
+		sprite.modulate = Elements.COLOR[element_type]
 
 
 func _physics_process(_delta: float) -> void:
@@ -44,6 +55,8 @@ func take_damage(amount: float) -> void:
 
 func die() -> void:
 	drop_element()
+	if is_instance_valid(player) and player.has_method("gain_exp"):
+		player.gain_exp(exp_reward)
 	queue_free()
 
 
@@ -51,10 +64,21 @@ func drop_element() -> void:
 	var pickup_scene := load("res://element_pickup.tscn")
 	if not pickup_scene:
 		return
+
+	spawn_pickup(pickup_scene, element_type, Vector2.ZERO)
+
+	# Synergy: ถ้าธาตุที่ผู้เล่นสะสมเยอะสุด "ตรงข้าม" กับธาตุศัตรูตัวนี้ → ดรอปโบนัสอีก 1 ชิ้น
+	if is_instance_valid(player) and player.has_method("get_dominant_element"):
+		var dominant = player.get_dominant_element()
+		if dominant != null and dominant == Elements.get_opposite(element_type):
+			spawn_pickup(pickup_scene, element_type, Vector2(16, 16))
+
+
+func spawn_pickup(pickup_scene: PackedScene, drop_element_type: Elements.Element, offset: Vector2) -> void:
 	var pickup = pickup_scene.instantiate()
 	get_tree().current_scene.add_child(pickup)
-	pickup.global_position = global_position
-	pickup.element_type = Elements.get_random_element()
+	pickup.global_position = global_position + offset
+	pickup.element_type = drop_element_type
 
 
 # เรียกจาก signal body_entered ของ Area2D (child) เท่านั้น — สำหรับตรวจจับโดนกระสุน

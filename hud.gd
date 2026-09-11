@@ -25,6 +25,12 @@ extends CanvasLayer
 @onready var currency_label: Label = $GameOverPanel/CurrencyLabel
 @onready var hp_upgrade_button: Button = $GameOverPanel/HPUpgradeButton
 @onready var damage_upgrade_button: Button = $GameOverPanel/DamageUpgradeButton
+@onready var levelup_panel: Control = $LevelUpPanel
+@onready var choice1_button: Button = $LevelUpPanel/Choice1Button
+@onready var choice2_button: Button = $LevelUpPanel/Choice2Button
+@onready var choice3_button: Button = $LevelUpPanel/Choice3Button
+
+var current_level_up_choices: Array = []
 
 var elapsed_time: float = 0.0
 var element_labels: Dictionary = {}
@@ -59,6 +65,15 @@ func _ready() -> void:
 
 	hp_upgrade_button.pressed.connect(_on_hp_upgrade_pressed)
 	damage_upgrade_button.pressed.connect(_on_damage_upgrade_pressed)
+
+	levelup_panel.visible = false
+	levelup_panel.process_mode = Node.PROCESS_MODE_ALWAYS
+	choice1_button.pressed.connect(func(): _on_choice_pressed(0))
+	choice2_button.pressed.connect(func(): _on_choice_pressed(1))
+	choice3_button.pressed.connect(func(): _on_choice_pressed(2))
+
+	if player:
+		player.leveled_up.connect(_on_leveled_up)
 
 
 func build_element_tracker() -> void:
@@ -163,6 +178,30 @@ func _on_hp_upgrade_pressed() -> void:
 func _on_damage_upgrade_pressed() -> void:
 	SaveManager.buy_damage_upgrade()
 	refresh_shop_ui()
+
+
+func _on_leveled_up(choices: Array) -> void:
+	current_level_up_choices = choices
+	get_tree().paused = true
+
+	var buttons: Array[Button] = [choice1_button, choice2_button, choice3_button]
+	for i in choices.size():
+		var choice: Dictionary = choices[i]
+		buttons[i].text = "%s\n%s" % [choice["name"], choice["description"]]
+		buttons[i].visible = true
+
+	levelup_panel.visible = true
+
+
+func _on_choice_pressed(index: int) -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if player and current_level_up_choices.size() > index:
+		var choice: Dictionary = current_level_up_choices[index]
+		var apply_fn: Callable = choice["apply"]
+		apply_fn.call(player)
+
+	levelup_panel.visible = false
+	get_tree().paused = false
 
 
 func _on_restart_pressed() -> void:

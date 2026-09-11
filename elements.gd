@@ -39,6 +39,22 @@ const COLOR := {
 	Element.DARK: Color(0.4, 0.1, 0.5),
 }
 
+# คู่ธาตุตรงข้าม — ใช้เช็ค synergy (ผู้เล่นสะสมธาตุตรงข้ามกับศัตรูเยอะสุด = ดรอปโบนัส)
+const OPPOSITE := {
+	Element.FIRE: Element.WATER,
+	Element.WATER: Element.FIRE,
+	Element.EARTH: Element.WIND,
+	Element.WIND: Element.EARTH,
+	Element.LIGHTNING: Element.ICE,
+	Element.ICE: Element.LIGHTNING,
+	Element.LIGHT: Element.DARK,
+	Element.DARK: Element.LIGHT,
+}
+
+
+static func get_opposite(element: Element) -> Element:
+	return OPPOSITE[element]
+
 # สูตร fusion — key คือคู่ธาตุ (เรียงตาม enum value น้อยไปมาก), value คือชื่อผลลัพธ์
 # ยังไม่ผูก effect จริง แค่นิยามชื่อไว้ก่อนสำหรับ prototype นี้
 const FUSION_RECIPES := {

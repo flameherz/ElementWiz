@@ -11,6 +11,7 @@ signal defeated
 @export var move_speed: float = 35.0
 @export var contact_damage: float = 15.0
 @export var phase2_hp_threshold: float = 0.5  # เปลี่ยนเป็น phase 2 เมื่อ HP ต่ำกว่า 50%
+@export var exp_reward: float = 50.0
 
 @export_group("Ranged Attack")
 @export var attack_interval: float = 3.5  # วินาทีระหว่างการโจมตีระยะไกลแต่ละครั้ง
@@ -93,5 +94,7 @@ func enter_phase2() -> void:
 
 
 func die() -> void:
+	if is_instance_valid(player) and player.has_method("gain_exp"):
+		player.gain_exp(exp_reward)
 	defeated.emit()
 	queue_free()

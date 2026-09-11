@@ -20,10 +20,22 @@ signal health_changed(current_hp: float, max_hp: float)
 signal died
 signal element_changed(element_type: Elements.Element, count: int)
 signal fusion_triggered(element_a: Elements.Element, element_b: Elements.Element, fusion_name: String)
+signal leveled_up(choices: Array)
 
 var element_counts: Dictionary = {}
+var level: int = 1
+var exp: float = 0.0
+var exp_to_next: float = 10.0
 
 const FUSION_THRESHOLD := 3
+
+var UPGRADE_POOL := [
+	{"name": "เร่งฝีเท้า", "description": "ความเร็วเดิน +20%", "apply": func(p): p.upgrade_move_speed(1.2)},
+	{"name": "พลังทำลายล้าง", "description": "พลังโจมตี +3", "apply": func(p): p.upgrade_damage(3.0)},
+	{"name": "จังหวะไว", "description": "ยิงเร็วขึ้น 15%", "apply": func(p): p.upgrade_attack_speed(0.85)},
+	{"name": "พลังชีวิตเพิ่มพูน", "description": "พลังชีวิตสูงสุด +20", "apply": func(p): p.upgrade_max_hp(20.0)},
+	{"name": "สายตาไกล", "description": "ระยะยิงไกลขึ้น +50", "apply": func(p): p.upgrade_attack_range(50.0)},
+]
 
 @export var base_projectile_damage: float = 10.0
 var bonus_damage: float = 0.0
@@ -43,6 +55,55 @@ func collect_element(element_type: Elements.Element) -> void:
 	element_counts[element_type] += 1
 	element_changed.emit(element_type, element_counts[element_type])
 	check_for_fusion(element_type)
+
+
+func get_dominant_element():
+	var best_element = null
+	var best_count: int = 0
+	for element in Elements.Element.values():
+		if element_counts[element] > best_count:
+			best_count = element_counts[element]
+			best_element = element
+	return best_element
+
+
+func gain_exp(amount: float) -> void:
+	exp += amount
+	if exp >= exp_to_next:
+		level_up()
+
+
+func level_up() -> void:
+	level += 1
+	exp -= exp_to_next
+	exp_to_next *= 1.3
+
+	var pool: Array = UPGRADE_POOL.duplicate()
+	pool.shuffle()
+	var choices: Array = pool.slice(0, 3)
+	leveled_up.emit(choices)
+
+
+func upgrade_move_speed(multiplier: float) -> void:
+	move_speed *= multiplier
+
+
+func upgrade_damage(amount: float) -> void:
+	base_projectile_damage += amount
+
+
+func upgrade_attack_speed(multiplier: float) -> void:
+	attack_cooldown *= multiplier
+
+
+func upgrade_max_hp(amount: float) -> void:
+	max_hp += amount
+	current_hp += amount
+	health_changed.emit(current_hp, max_hp)
+
+
+func upgrade_attack_range(amount: float) -> void:
+	attack_range += amount
 
 
 func check_for_fusion(just_collected: Elements.Element) -> void:

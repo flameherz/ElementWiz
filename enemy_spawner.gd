@@ -41,6 +41,8 @@ func spawn_enemy() -> void:
 	var angle := randf() * TAU
 	var offset := Vector2(cos(angle), sin(angle)) * spawn_radius
 	enemy.global_position = player.global_position + offset
+	enemy.element_type = Elements.get_random_element()
+	enemy.apply_element_tint()
 
 
 func spawn_elite() -> void:
@@ -54,11 +56,14 @@ func spawn_elite() -> void:
 	var angle := randf() * TAU
 	var offset := Vector2(cos(angle), sin(angle)) * spawn_radius * 0.6
 	elite.global_position = player.global_position + offset
+	elite.element_type = Elements.get_random_element()
+	elite.apply_element_tint()
 
 	elite.max_hp *= 3.0
 	elite.current_hp = elite.max_hp
 	elite.contact_damage *= 1.5
 	elite.move_speed *= 0.8
+	elite.exp_reward *= 4.0
 	elite.scale = Vector2(1.6, 1.6)
 
 
