@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b2lmiqfkgplt0"]
+
+[ext_resource type="Script" uid="uid://cmpyy55tvw0ho" path="res://projectile.gd" id="1_a85iw"]
+[ext_resource type="Texture2D" uid="uid://c115ypwy27av6" path="res://icon.svg" id="2_qxf0c"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ysv2h"]
+
+[node name="Projectile" type="Area2D" unique_id=1972838815]
+script = ExtResource("1_a85iw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=719377604]
+modulate = Color(1, 1, 0, 1)
+texture = ExtResource("2_qxf0c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=40785457]
+shape = SubResource("CircleShape2D_ysv2h")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
